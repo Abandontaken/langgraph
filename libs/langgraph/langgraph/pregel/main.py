@@ -717,7 +717,7 @@ class Pregel(
 
     stream_eager: bool = False
     """Whether to force emitting stream events eagerly, automatically turned on
-    for stream_mode "messages" and "custom"."""
+    for stream_mode "messages", "custom" and "tools"."""
 
     output_channels: str | Sequence[str]
 
@@ -2803,6 +2803,7 @@ class Pregel(
                 - `"checkpoints"`: Emit an event when a checkpoint is created, in the same format as returned by `get_state()`.
                 - `"tasks"`: Emit events when tasks start and finish, including their results and errors.
                 - `"debug"`: Emit debug events with as much information as possible for each step.
+                - `"tools"`: Emit events when tool calls start, stream partial output, finish, and fail.
 
                 You can pass a list as the `stream_mode` parameter to stream multiple modes at once.
                 The streamed outputs will be tuples of `(mode, data)`.
@@ -3056,6 +3057,7 @@ class Pregel(
                     or subgraphs
                     or "messages" in stream_modes
                     or "custom" in stream_modes
+                    or "tools" in stream_modes
                 ):
                     # we are careful to have a single waiter live at any one time
                     # because on exit we increment semaphore count by exactly 1
@@ -3216,6 +3218,7 @@ class Pregel(
                 - `"checkpoints"`: Emit an event when a checkpoint is created, in the same format as returned by `get_state()`.
                 - `"tasks"`: Emit events when tasks start and finish, including their results and errors.
                 - `"debug"`: Emit debug events with as much information as possible for each step.
+                - `"tools"`: Emit events when tool calls start, stream partial output, finish, and fail.
 
                 You can pass a list as the `stream_mode` parameter to stream multiple modes at once.
                 The streamed outputs will be tuples of `(mode, data)`.
@@ -3510,6 +3513,7 @@ class Pregel(
                     or subgraphs
                     or "messages" in stream_modes
                     or "custom" in stream_modes
+                    or "tools" in stream_modes
                 ):
                     # Keep a single waiter task alive; ensure cleanup on exit.
                     waiter: asyncio.Task[None] | None = None
